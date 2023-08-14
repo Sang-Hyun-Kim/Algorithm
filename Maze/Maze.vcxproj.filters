@@ -21,6 +21,7 @@
     <ClCompile Include="Board.cpp">
       <Filter>Board</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -33,5 +34,6 @@
     <ClInclude Include="Board.h">
       <Filter>Board</Filter>
     </ClInclude>
+    <ClInclude Include="Player.h" />
   </ItemGroup>
 </Project>

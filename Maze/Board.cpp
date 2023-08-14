@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Board.h"
 #include "ConsoleHelper.h"
-
+#include "Player.h"
 
 const char* TILE = "■";
 
@@ -43,7 +43,21 @@ void Board::GenerateMap()
 			if (x % 2 == 0 || y % 2 == 0)
 				continue;
 
+			if(y== _size - 2 && x == _size - 2 )
+				continue;
+
+			if (y == _size - 2)
+			{
+				_tile[y][x + 1] = TileType::EMPTY;
+				continue;
+			}
 			const int32 randValue = ::rand() % 2;
+
+			if (x == _size - 2)
+			{
+				_tile[y + 1][x] = TileType::EMPTY;
+				continue;
+			}
 			if (randValue == 0)
 			{
 				_tile[y][x + 1] = TileType::EMPTY;
@@ -57,9 +71,10 @@ void Board::GenerateMap()
 
 }
 
-void Board::Init(int32 size)
+void Board::Init(int32 size, Player* player)
 {
 	_size = size;
+	_player = player;
 	GenerateMap();
 }
 
@@ -74,7 +89,7 @@ void Board::Render()
 		{
 			for (int32 x = 0; x < 25; x++)
 			{
-				ConsoleColor color = GetTileColor(Pos{x,y});
+				ConsoleColor color = GetTileColor(Pos{y,x});
 				ConsoleHelper::SetCursorColor(color);
 
 				cout << TILE;
@@ -96,6 +111,16 @@ TileType Board::GetTileType(Pos pos)
 
 ConsoleColor Board::GetTileColor(Pos pos)
 {
+	// 플레이어 위치는 노란색
+	if (_player && _player->GetPos() == pos)
+		return ConsoleColor::YELLOW;
+
+	// 탈출구는 파란색
+	if (GetExitPos() == pos)
+	{
+		return ConsoleColor::BLUE;
+	}
+
 	TileType tileType = GetTileType(pos);
 
 	switch (tileType)
